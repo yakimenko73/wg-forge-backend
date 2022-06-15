@@ -14,7 +14,7 @@ defmodule WgForge.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :ecto, :postgrex],
       mod: {WgForge.Application, []}
     ]
   end
@@ -24,6 +24,8 @@ defmodule WgForge.MixProject do
     [
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.1"},
+      {:ecto, "~> 1.0"},
+      {:postgrex, ">= 0.0.0"}
     ]
   end
 end

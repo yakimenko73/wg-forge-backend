@@ -1,6 +1,8 @@
 defmodule WgForge.Application do
   use Application
   require Logger
+  import Supervisor.Spec
+  alias WgForge.Postgres.Repository, as: PostgresRepo
 
   def start(_type, _args) do
     children = [
@@ -12,7 +14,8 @@ defmodule WgForge.Application do
           ip: ip(),
           port: port()
         ]
-      }
+      },
+      supervisor(PostgresRepo, [])
     ]
 
     opts = [strategy: :one_for_one, name: WgForge.Supervisor]
