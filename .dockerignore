@@ -1,0 +1,6 @@
+/instructions/
+/scripts/
+/.elixir_ls/
+/_build/
+/deps/
+*.md
