@@ -6,7 +6,12 @@ defmodule WgForge.Application do
     children = [
       {
         Plug.Cowboy,
-        scheme: :http, plug: WgForge.Router, options: [port: 8080]
+        scheme: :http,
+        plug: WgForge.Router,
+        options: [
+          ip: ip(),
+          port: port()
+        ]
       }
     ]
 
@@ -16,4 +21,8 @@ defmodule WgForge.Application do
 
     Supervisor.start_link(children, opts)
   end
+
+  defp port, do: Application.get_env(:wg_forge, :port, 8080)
+
+  defp ip, do: Application.get_env(:wg_forge, :ip, {127, 0, 0, 1})
 end

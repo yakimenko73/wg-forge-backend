@@ -13,11 +13,7 @@ defmodule WgForge.Router do
 
   plug(:dispatch)
 
-  match "/ping" do
-    send_resp(conn, 200, "Cats Service. Version 0.1.0")
-  end
+  match("/ping", do: send_resp(conn, 200, "Cats Service. Version 0.1.0"))
 
-  match _ do
-    send_resp(conn, 404, "Not found")
-  end
+  match(_, do: send_resp(conn, 404, "Not found"))
 end
