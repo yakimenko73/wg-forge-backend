@@ -24,8 +24,9 @@ defmodule WgForge.MixProject do
     [
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.1"},
-      {:ecto, "~> 1.0"},
-      {:postgrex, ">= 0.0.0"}
+      {:ecto, "~> 3.8.4"},
+      {:ecto_sql, "~> 3.0-rc.1"},
+      {:postgrex, "~> 0.16.3"}
     ]
   end
 end

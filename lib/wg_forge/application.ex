@@ -1,7 +1,6 @@
 defmodule WgForge.Application do
   use Application
   require Logger
-  import Supervisor.Spec
   alias WgForge.Postgres.Repository, as: PostgresRepo
 
   def start(_type, _args) do
@@ -15,7 +14,7 @@ defmodule WgForge.Application do
           port: port()
         ]
       },
-      supervisor(PostgresRepo, [])
+      PostgresRepo
     ]
 
     opts = [strategy: :one_for_one, name: WgForge.Supervisor]

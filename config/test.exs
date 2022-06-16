@@ -5,7 +5,6 @@ config :wg_forge,
   port: 8080
 
 config :wg_forge, WgForge.Postgres.Repository,
-  adapter: Ecto.Adapters.Postgres,
   database: "wgforge",
   username: "postgres",
   password: "postgres",
