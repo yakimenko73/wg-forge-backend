@@ -4,7 +4,15 @@ defmodule WgForge.Application do
   alias WgForge.Postgres.Repository, as: PostgresRepo
 
   def start(_type, _args) do
-    children = [
+    Logger.info("Starting application...")
+
+    Supervisor.start_link(children(), opts())
+  end
+
+  defp opts(), do: [strategy: :one_for_one, name: WgForge.Supervisor]
+
+  defp children() do
+    [
       {
         Plug.Cowboy,
         scheme: :http,
@@ -16,12 +24,6 @@ defmodule WgForge.Application do
       },
       PostgresRepo
     ]
-
-    opts = [strategy: :one_for_one, name: WgForge.Supervisor]
-
-    Logger.info("Starting application...")
-
-    Supervisor.start_link(children, opts)
   end
 
   defp port, do: Application.get_env(:wg_forge, :port, 8080)

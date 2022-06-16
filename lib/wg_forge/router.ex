@@ -1,36 +1,14 @@
 defmodule WgForge.Router do
-  use Plug.Router
-  require Logger
-  alias WgForge.Postgres.Service
+  use WgForge.Macros.Router
+  alias WgForge.Plugs.Cat, as: CatsPlug
 
-  plug(Plug.Logger)
+  get("/ping", do: render_json(conn, "Cats Service. Version 0.1.0"))
 
-  plug(Plug.Parsers,
-    parsers: [:json],
-    pass: ["application/json"],
-    json_decoder: Jason
-  )
+  forward("/cats", to: CatsPlug)
 
-  plug(:match)
-
-  plug(:dispatch)
-
-  get("/ping", do: send_resp(conn, 200, "Cats Service. Version 0.1.0"))
-
-  get "/cats" do
-    render_json(conn, Service.get_cats())
-  end
-
-  post "/cats" do
+  match _ do
     conn
-    |> Map.put(:status, 201)
-    |> render_json("Cat created")
-  end
-
-  match(_, do: send_resp(conn, 404, "Not found"))
-
-  defp render_json(%{status: status} = conn, data) do
-    body = Jason.encode!(data)
-    send_resp(conn, status || 200, body)
+    |> Map.put(:status, 404)
+    |> render_json("Not found")
   end
 end

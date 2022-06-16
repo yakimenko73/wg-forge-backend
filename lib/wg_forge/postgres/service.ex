@@ -6,8 +6,8 @@ defmodule WgForge.Postgres.Service do
   def get_cats() do
     query =
       from(
-        c in Cat,
-        select: c.name
+        cat in Cat,
+        select: cat
       )
 
     Repo.all(query)
