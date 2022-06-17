@@ -8,10 +8,6 @@ defmodule WgForge.Macros.Router do
         use Plug.Debugger
       end
 
-      require Logger
-
-      plug(Plug.Logger)
-
       plug(Plug.Parsers,
         parsers: [:json],
         pass: ["application/json"],
@@ -21,15 +17,15 @@ defmodule WgForge.Macros.Router do
       plug(:match)
       plug(:dispatch)
 
+      defp render_json(conn, status, data) do
+        conn
+        |> Map.put(:status, status)
+        |> render_json(data)
+      end
+
       defp render_json(%{status: status} = conn, data) do
         body = Jason.encode!(data)
         send_resp(conn, status || 200, body)
-      end
-
-      defp render_not_found_error(conn) do
-        conn
-        |> Map.put(:status, 404)
-        |> render_json("Not found")
       end
     end
   end
