@@ -17,7 +17,7 @@ defmodule WgForge.Plugs.Cat do
 
   match(_, do: render_json(conn, 404, "Not found"))
 
-  def handle_errors(conn, %{kind: _, reason: reason, stack: _}) when is_exception(reason, IncompleteRequestError) do
-    render_json(conn, 400, reason.message)
+  def handle_errors(conn, %{reason: reason}) when is_exception(reason, IncompleteRequestError) do
+    render_json(conn, reason.code, reason)
   end
 end

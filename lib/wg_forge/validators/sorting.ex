@@ -14,6 +14,6 @@ defmodule WgForge.Validators.Sorting do
   end
 
   defp validate_order(order) do
-    if not Enum.member?(@valid_orders, order), do: raise(IncompleteRequestError)
+    unless Enum.member?(@valid_orders, order), do: raise(IncompleteRequestError)
   end
 end
