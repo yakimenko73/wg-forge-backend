@@ -1,11 +1,10 @@
 defmodule WgForge.Validators.Sorting do
-  require Logger
   alias WgForge.Errors.IncompleteRequestError
 
-  @required_params ["attribute", "order"]
+  @required_params [:attribute, :order]
   @valid_orders ["asc", "desc"]
 
-  def with_require_params(%{"attribute" => _, "order" => order}) do
+  def with_require_params(%{attribute: _, order: order}) do
     order |> validate_order()
   end
 

@@ -4,11 +4,13 @@ defmodule WgForge.Plugs.Cat do
   alias WgForge.Postgres.Service, as: Postgres
   alias WgForge.Validators.Sorting, as: SortingValidator
   alias WgForge.Errors.IncompleteRequestError
+  alias WgForge.Utils.Utils
 
   get "/" do
-    SortingValidator.with_require_params(conn.params)
+    params = Utils.to_atom_keys(conn.params)
+    SortingValidator.with_require_params(params)
 
-    render_json(conn, Postgres.get_cats())
+    render_json(conn, Postgres.get_cats(params))
   end
 
   post "/" do
@@ -19,5 +21,9 @@ defmodule WgForge.Plugs.Cat do
 
   def handle_errors(conn, %{reason: reason}) when is_exception(reason, IncompleteRequestError) do
     render_json(conn, reason.code, reason)
+  end
+
+  def handle_errors(conn, reason) do
+    render_json(conn, 500, reason.message)
   end
 end
