@@ -25,6 +25,12 @@ defmodule WgForge.Macros.Router do
         body = Jason.encode!(data)
         send_resp(conn, status || 200, body)
       end
+
+      defp render_not_found_error(conn) do
+        conn
+        |> Map.put(:status, 404)
+        |> render_json("Not found")
+      end
     end
   end
 end

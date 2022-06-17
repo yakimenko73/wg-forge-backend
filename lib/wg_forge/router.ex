@@ -6,9 +6,5 @@ defmodule WgForge.Router do
 
   forward("/cats", to: CatsPlug)
 
-  match _ do
-    conn
-    |> Map.put(:status, 404)
-    |> render_json("Not found")
-  end
+  match(_, do: render_not_found_error(conn))
 end
