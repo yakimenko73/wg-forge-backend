@@ -19,11 +19,11 @@ defmodule WgForge.Plugs.Cat do
 
   match(_, do: render_json(conn, 404, "Not found"))
 
-  def handle_errors(conn, %{reason: reason}) when is_exception(reason, IncompleteRequestError) do
+  def handle_errors(conn, %{reason: reason}) when is_map_key(reason, :code) do
     render_json(conn, reason.code, reason)
   end
 
-  def handle_errors(conn, reason) do
-    render_json(conn, 500, reason.message)
+  def handle_errors(conn, %{reason: reason}) do
+    render_json(conn, 500, reason)
   end
 end

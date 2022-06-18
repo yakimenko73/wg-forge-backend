@@ -1,4 +1,4 @@
-defmodule WgForge.Postgres.Models.Cat do
+defmodule WgForge.Postgres.Scheme.Cat do
   use Ecto.Schema
 
   @primary_key {:name, :string, []}
@@ -9,4 +9,6 @@ defmodule WgForge.Postgres.Models.Cat do
     field(:tail_length, :integer)
     field(:whiskers_length, :integer)
   end
+
+  def get_fields(), do: __schema__(:fields)
 end
