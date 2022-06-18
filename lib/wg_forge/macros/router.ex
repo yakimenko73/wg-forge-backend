@@ -17,13 +17,13 @@ defmodule WgForge.Macros.Router do
       plug(:match)
       plug(:dispatch)
 
-      defp render_json(conn, status, data) do
+      def render_json(conn, status, data) do
         conn
         |> Map.put(:status, status)
         |> render_json(data)
       end
 
-      defp render_json(%{status: status} = conn, data) do
+      def render_json(%{status: status} = conn, data) do
         body = Jason.encode!(data)
         send_resp(conn, status || 200, body)
       end

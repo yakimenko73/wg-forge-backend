@@ -1,23 +1,15 @@
-defmodule WgForge.Validators.Sorting do
+defmodule WgForge.Validators.SortingValidator do
+  use WgForge.Macros.Validator
   alias WgForge.Errors.IncompleteRequestError
+  alias WgForge.Utils.Utils
 
   @required_params MapSet.new([:attribute, :order])
 
   def with_require_params(params) do
-    @required_params
-    |> MapSet.difference(
-      params
-      |> Map.keys()
-      |> MapSet.new()
-    )
-    |> validate_difference()
-  end
+    diff = get_difference_set(params, @required_params)
 
-  defp validate_difference(%MapSet{map: map}) do
-    diff_size = map_size(map)
-
-    if diff_size > 0 and MapSet.size(@required_params) != diff_size do
-      raise(IncompleteRequestError, params: Map.keys(map))
+    unless valid_size?(MapSet.size(diff), MapSet.size(@required_params)) do
+      raise(IncompleteRequestError, params: Utils.set_to_enum(diff))
     end
   end
 end
