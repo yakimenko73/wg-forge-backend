@@ -14,7 +14,7 @@ defmodule WgForge.Plugs.Cat do
   end
 
   post "/" do
-    render_json(conn, 201, "Cat created")
+    render_json(conn, 201, Postgres.add_cat(conn.params))
   end
 
   match(_, do: render_json(conn, 404, "Not found"))
