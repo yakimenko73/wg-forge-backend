@@ -4,7 +4,7 @@ defmodule WgForge.Postgres.Service do
   alias WgForge.Postgres.Scheme.Cat
   alias WgForge.Errors.{InvalidFieldError, AlreadyExistError}
 
-  def get_cats(%{attribute: attr, order: _} = params) do
+  def get_cats!(%{attribute: attr, order: _} = params) do
     validate_attribute(attr)
 
     Cat
@@ -13,19 +13,19 @@ defmodule WgForge.Postgres.Service do
     |> Repo.all()
   end
 
-  def get_cats(params) do
+  def get_cats!(params) do
     Cat
     |> with_paging(params)
     |> Repo.all()
   end
 
-  def add_cat(params) do
+  def add_cat!(params) do
     with %Ecto.Changeset{valid?: valid} = changeset when valid <- Cat.changeset(%Cat{}, params),
          {:ok, _} <- Repo.insert(changeset) do
       changeset.changes
     else
       %Ecto.Changeset{errors: errors} -> raise(InvalidFieldError, params: Keyword.keys(errors))
-      {:error, res} -> raise(AlreadyExistError, message: res.errors)
+      {:error, _} -> raise(AlreadyExistError)
     end
   end
 

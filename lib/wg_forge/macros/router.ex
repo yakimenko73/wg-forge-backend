@@ -22,7 +22,6 @@ defmodule WgForge.Macros.Router do
       def render_json(conn, status, data) do
         conn
         |> Map.put(:status, status)
-        |> put_resp_content_type(@content_type)
         |> render_json(data)
       end
 

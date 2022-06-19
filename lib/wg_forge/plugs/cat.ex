@@ -6,15 +6,15 @@ defmodule WgForge.Plugs.Cat do
   alias WgForge.Utils.Utils
 
   get "/" do
-    params = Utils.to_atom_keys(conn.params)
-    SortingValidator.with_require_params(params)
-    PagingValidator.with_require_params(params)
-
-    render_json(conn, Postgres.get_cats(params))
+    with params <- Utils.to_atom_keys(conn.params),
+         _ <- SortingValidator.with_require_params!(params),
+         _ <- PagingValidator.with_require_params!(params) do
+      render_json(conn, Postgres.get_cats!(params))
+    end
   end
 
   post "/" do
-    render_json(conn, 201, Postgres.add_cat(conn.params))
+    render_json(conn, 201, Postgres.add_cat!(conn.params))
   end
 
   match(_, do: render_json(conn, 404, "Not found"))
