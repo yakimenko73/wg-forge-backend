@@ -8,6 +8,8 @@ defmodule WgForge.Macros.Router do
         use Plug.Debugger
       end
 
+      @content_type "application/json"
+
       plug(Plug.Parsers,
         parsers: [:json],
         pass: ["application/json"],
@@ -20,12 +22,16 @@ defmodule WgForge.Macros.Router do
       def render_json(conn, status, data) do
         conn
         |> Map.put(:status, status)
+        |> put_resp_content_type(@content_type)
         |> render_json(data)
       end
 
       def render_json(%{status: status} = conn, data) do
         body = Jason.encode!(data)
-        send_resp(conn, status || 200, body)
+
+        conn
+        |> put_resp_content_type(@content_type)
+        |> send_resp(status || 200, body)
       end
     end
   end
