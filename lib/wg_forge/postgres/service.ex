@@ -1,5 +1,5 @@
 defmodule WgForge.Postgres.Service do
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [order_by: 2, limit: 2, offset: 2]
   alias WgForge.Postgres.Repository, as: Repo
   alias WgForge.Postgres.Scheme.Cat
   alias WgForge.Errors.InvalidFieldError
@@ -7,27 +7,33 @@ defmodule WgForge.Postgres.Service do
   def get_cats(%{attribute: attr, order: _} = params) do
     validate_sort_attribute(attr)
 
-    query =
-      from(
-        cat in Cat,
-        order_by: ^order_by(params)
-      )
-
-    Repo.all(query)
+    Cat
+    |> with_order(params)
+    |> with_paging(params)
+    |> Repo.all()
   end
 
-  def get_cats(_params) do
-    Repo.all(Cat)
+  def get_cats(params) do
+    Cat
+    |> with_paging(params)
+    |> Repo.all()
   end
 
-  defp order_by(%{order: "asc", attribute: field}), do: [asc: String.to_atom(field)]
+  defp with_order(query, %{order: "asc", attribute: field}),
+    do: query |> order_by(asc: ^String.to_atom(field))
 
-  defp order_by(%{order: "desc", attribute: field}), do: [desc: String.to_atom(field)]
+  defp with_order(query, %{order: "desc", attribute: field}),
+    do: query |> order_by(desc: ^String.to_atom(field))
 
-  defp order_by(_params), do: raise(InvalidFieldError, params: [:order])
+  defp with_order(_query, _params), do: raise(InvalidFieldError, params: [:order])
+
+  defp with_paging(query, %{limit: limit, offset: offset}),
+    do: query |> limit(^limit) |> offset(^offset)
+
+  defp with_paging(query, _params), do: query
 
   defp validate_sort_attribute(attr) do
-    if String.to_atom(attr) not in Cat.get_fields() do
+    unless String.to_atom(attr) in Cat.get_fields() do
       raise(InvalidFieldError, params: [:attribute])
     end
   end
