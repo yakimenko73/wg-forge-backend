@@ -3,12 +3,11 @@ defmodule WgForge.Macros.Router do
     quote do
       use Plug.Router
       use Plug.ErrorHandler
+      import WgForge.Plugs.RateLimit
 
       if Mix.env() == :dev do
         use Plug.Debugger
       end
-
-      @content_type "application/json"
 
       plug(Plug.Parsers,
         parsers: [:json],
@@ -16,8 +15,15 @@ defmodule WgForge.Macros.Router do
         json_decoder: Jason
       )
 
+      plug(:rate_limit,
+        max_requests: Application.get_env(:wg_forge, :max_requests, 600),
+        interval_millis: Application.get_env(:wg_forge, :interval_millis, 60_000)
+      )
+
       plug(:match)
       plug(:dispatch)
+
+      @content_type "application/json"
 
       def render_json(conn, status, data) do
         conn

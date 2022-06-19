@@ -26,7 +26,8 @@ defmodule WgForge.MixProject do
       {:jason, "~> 1.1"},
       {:ecto, "~> 3.8.4"},
       {:ecto_sql, "~> 3.0-rc.1"},
-      {:postgrex, "~> 0.16.3"}
+      {:postgrex, "~> 0.16.3"},
+      {:ex_rated, "~> 2.0"}
     ]
   end
 end

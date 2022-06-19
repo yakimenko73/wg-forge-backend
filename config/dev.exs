@@ -2,7 +2,9 @@ import Config
 
 config :wg_forge,
   ip: {127, 0, 0, 1},
-  port: 8080
+  port: 8080,
+  max_requests: 600,
+  interval_millis: 60_000
 
 config :wg_forge, WgForge.Postgres.Repository,
   database: "wgforge",
